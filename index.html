@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Personal Statement Interview — Sophie</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #F7F4EE;
+      --ink: #1C1A17;
+      --ink-soft: #4A4640;
+      --ink-faint: #9A958D;
+      --border: #DDD9D0;
+      --claude-bg: #FFFFFF;
+      --user-bg: #EBE6DC;
+      --accent: #5C6B3A;
+      --accent-light: #E8EDE0;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+    }
+
+    #app {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 3rem 0 2rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+
+    header .eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 0.75rem;
+    }
+
+    header h1 {
+      font-family: 'Lora', serif;
+      font-size: 26px;
+      font-weight: 400;
+      line-height: 1.3;
+      color: var(--ink);
+      margin-bottom: 0.75rem;
+    }
+
+    header p {
+      font-size: 15px;
+      color: var(--ink-soft);
+      line-height: 1.7;
+      max-width: 540px;
+    }
+
+    #messages {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding-bottom: 1rem;
+    }
+
+    .msg {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      animation: fadeUp 0.3s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .msg.claude { align-items: flex-start; }
+    .msg.user   { align-items: flex-end; }
+
+    .speaker {
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      font-weight: 500;
+      padding: 0 4px;
+    }
+
+    .bubble {
+      max-width: 86%;
+      padding: 14px 18px;
+      font-size: 15.5px;
+      line-height: 1.75;
+      color: var(--ink);
+    }
+
+    .msg.claude .bubble {
+      background: var(--claude-bg);
+      border: 1px solid var(--border);
+      border-radius: 2px 14px 14px 14px;
+      font-family: 'Lora', serif;
+    }
+
+    .msg.user .bubble {
+      background: var(--user-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px 2px 14px 14px;
+    }
+
+    .typing-bubble {
+      background: var(--claude-bg);
+      border: 1px solid var(--border);
+      border-radius: 2px 14px 14px 14px;
+      padding: 14px 18px;
+      display: flex;
+      gap: 5px;
+      align-items: center;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--ink-faint);
+      animation: pulse 1.3s infinite ease-in-out;
+    }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes pulse {
+      0%, 60%, 100% { opacity: 0.3; transform: scale(1); }
+      30% { opacity: 1; transform: scale(1.3); }
+    }
+
+    #input-section {
+      padding: 1.5rem 0 2.5rem;
+      border-top: 1px solid var(--border);
+      margin-top: 1rem;
+    }
+
+    #user-input {
+      width: 100%;
+      min-height: 110px;
+      padding: 13px 15px;
+      font-size: 15px;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--ink);
+      background: var(--claude-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      resize: vertical;
+      line-height: 1.7;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+
+    #user-input::placeholder { color: var(--ink-faint); }
+    #user-input:focus { border-color: var(--accent); }
+
+    #input-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    #hint {
+      font-size: 12px;
+      color: var(--ink-faint);
+    }
+
+    #send-btn {
+      padding: 9px 24px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    #send-btn:hover { opacity: 0.88; }
+    #send-btn:active { transform: scale(0.97); }
+    #send-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    #error-msg {
+      font-size: 13px;
+      color: #B94040;
+      margin-top: 8px;
+      min-height: 18px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1rem 0 2rem;
+      font-size: 12px;
+      color: var(--ink-faint);
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <header>
+      <div class="eyebrow">College Essay Prep</div>
+      <h1>Let's find your story.</h1>
+      <p>This is a conversation — not a test. There are no right or wrong answers. Just be honest, take your time, and write the way you actually think.</p>
+    </header>
+
+    <div id="messages"></div>
+
+    <div id="input-section">
+      <textarea id="user-input" placeholder="Type your response here..."></textarea>
+      <div id="input-footer">
+        <span id="hint">⌘ + Enter to send</span>
+        <button id="send-btn">Send</button>
+      </div>
+      <div id="error-msg"></div>
+    </div>
+
+    <footer>Your responses are private and not stored anywhere.</footer>
+  </div>
+
+  <script>
+    const SYSTEM_PROMPT = `You are conducting a warm, probing college essay interview with a high school student named Sophie. Your goal is to help her discover the most authentic, compelling topic for her personal statement.
+
+Here is what you know about Sophie from her completed worksheet:
+
+VALUES: Her top 3 values are Love, Patience, and Curiosity. She connects love with empathy and sees it as a commitment to the sanctity of life. She's pre-med and wants to be a doctor. She described curiosity as forcing humility and open-mindedness.
+
+WHAT SHE LOVES: Small stickers, neat penmanship, pen and ink drawings, the glitter of suspension cells under a microscope, cleaning the kitchen floor, brushing her dog's fur, her family, polaroid cameras with overexposure, the speckled red of drosophila fly eyes under a microscope, crocheting animals, hikes with shallow inclines, apples, big hugs, small paper cranes, working in the library on crisp afternoons, corn juice.
+
+POWERFUL MOMENTS SHE SHARED:
+- She got her dog when she was discharged from a mental health hospital in Shanghai, where windows were barbed and girls who over-exercised were bound to their beds with restraints.
+- She described standing in the hallway of a nursing home, waiting for help, listening to a patient's death rattle — calling the hallway "a humid desert."
+- She wrote to her younger self: "Nothing is scripted. Trajectories are for falling objects, but a human in motion always retains the power to pivot." This is beautiful, philosophical writing.
+- Her inner voice tells her she has "misshapen features and large hands" and a writer's callus she's insecure about.
+- She worries her advocacy is "nothing more than a performance staged for the audience of one" — that she might be "a tourist in other people's tragedies."
+
+ESSAY IDEAS SHE LISTED:
+1. The theme of interpretation in medicine (shadowing Dr. Murakami with an Albanian-speaking DLBCL patient, Latin syntax as metaphor)
+2. Finding Diane on the nursing home bathroom floor, cleaning her up, and Diane hugging her when she returned from the hospital
+3. Her experience with an eating disorder
+4. Scientific illustration and drosophila research (better for shorter supplementals)
+
+HER IDENTITIES: Chinese American, artist, prospective physician, daughter, oncology lab intern, reader, friend.
+
+KEY INSIGHT: She is excellent at articulating how she feels but struggles to "brag" about her abilities. Her most powerful writing comes when she's specific and vulnerable — not when she's explaining concepts. The "interpretation" essay feels too cerebral. The real material is in her lived experiences.
+
+YOUR INTERVIEW APPROACH:
+- Start with a warm, low-stakes opening question — not about college or medicine, but about her and how she moves through the world
+- Move progressively toward more vulnerable, specific material
+- When she gives abstract answers, gently push toward the concrete and sensory
+- When she gives short answers, follow up: "Tell me more about that."
+- When she mentions something emotionally charged, slow down and stay there
+- Help her see the connection between her experiences — the dog after Shanghai, the nursing home, the fear of being a tourist in others' tragedies — these may be one story
+- The goal: by the end, help her identify ONE topic that is personal, specific, and shows who she is as a human being
+- Be warm but not sycophantic. Be curious. Be a good listener.
+- Ask ONE question at a time. Never ask two questions at once.
+- Keep responses conversational — 2–5 sentences. You are listening and guiding, not lecturing.
+- After 8–12 exchanges, if a clear topic has emerged, gently summarize what you've heard and reflect back what feels like the heart of her essay.`;
+
+    let history = [];
+    let isLoading = false;
+
+    const messagesEl = document.getElementById('messages');
+    const inputEl = document.getElementById('user-input');
+    const sendBtn = document.getElementById('send-btn');
+    const errorEl = document.getElementById('error-msg');
+
+    function appendMessage(role, text) {
+      const wrap = document.createElement('div');
+      wrap.className = `msg ${role}`;
+      const speaker = document.createElement('div');
+      speaker.className = 'speaker';
+      speaker.textContent = role === 'claude' ? 'Interviewer' : 'Sophie';
+      const bubble = document.createElement('div');
+      bubble.className = 'bubble';
+      bubble.textContent = text;
+      wrap.appendChild(speaker);
+      wrap.appendChild(bubble);
+      messagesEl.appendChild(wrap);
+      bubble.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+
+    function showTyping() {
+      const wrap = document.createElement('div');
+      wrap.className = 'msg claude';
+      wrap.id = 'typing';
+      const speaker = document.createElement('div');
+      speaker.className = 'speaker';
+      speaker.textContent = 'Interviewer';
+      const bubble = document.createElement('div');
+      bubble.className = 'typing-bubble';
+      bubble.innerHTML = '<div class="dot"></div><div class="dot"></div><div class="dot"></div>';
+      wrap.appendChild(speaker);
+      wrap.appendChild(bubble);
+      messagesEl.appendChild(wrap);
+      wrap.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+
+    function removeTyping() {
+      const el = document.getElementById('typing');
+      if (el) el.remove();
+    }
+
+    async function sendMessage(userText) {
+      if (isLoading) return;
+      isLoading = true;
+      sendBtn.disabled = true;
+      errorEl.textContent = '';
+
+      if (userText) {
+        appendMessage('user', userText);
+        history.push({ role: 'user', content: userText });
+      }
+
+      showTyping();
+
+      const messages = history.length > 0
+        ? history
+        : [{ role: 'user', content: 'Please begin the interview.' }];
+
+      try {
+        const res = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-20250514',
+            max_tokens: 1000,
+            system: SYSTEM_PROMPT,
+            messages
+          })
+        });
+
+        const data = await res.json();
+        removeTyping();
+
+        if (data.error) {
+          errorEl.textContent = 'Something went wrong — please try again.';
+          isLoading = false;
+          sendBtn.disabled = false;
+          return;
+        }
+
+        const reply = data.content.filter(b => b.type === 'text').map(b => b.text).join('');
+        appendMessage('claude', reply);
+        history.push({ role: 'assistant', content: reply });
+
+      } catch (err) {
+        removeTyping();
+        errorEl.textContent = 'Connection error — please check your connection and try again.';
+      }
+
+      isLoading = false;
+      sendBtn.disabled = false;
+      inputEl.focus();
+    }
+
+    sendBtn.addEventListener('click', () => {
+      const text = inputEl.value.trim();
+      if (!text) return;
+      inputEl.value = '';
+      sendMessage(text);
+    });
+
+    inputEl.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+        const text = inputEl.value.trim();
+        if (!text) return;
+        inputEl.value = '';
+        sendMessage(text);
+      }
+    });
+
+    sendMessage('');
+  </script>
+</body>
+</html>
